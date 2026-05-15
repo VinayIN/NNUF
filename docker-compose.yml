@@ -1,30 +1,30 @@
 services:
-  ros2-node0:
+  node0:
     image: ros:jazzy-ros-base
-    container_name: ros2-talker
+    container_name: talker
     command: bash -c "echo 'source /opt/ros/jazzy/setup.bash' >> ~/.bash_profile && exec bash"
     stdin_open: true
     tty: true
     volumes:
-      - ./talker_pkg:/ros2_NNUF:rw
-    working_dir: /ros2_NNUF
+      - ./talker_pkg:/NNUF:rw
+    working_dir: /NNUF
     networks:
-      - ros2_net
+      - node_network
 
-  ros2-node1:
+  node1:
     depends_on:
-      - ros2-node0
+      - node0
     image: ros:jazzy-ros-base
-    container_name: ros2-listener
+    container_name: listener
     command: bash -c "echo 'source /opt/ros/jazzy/setup.bash' >> ~/.bash_profile && exec bash"
     stdin_open: true
     tty: true
     volumes:
-      - ./listener_pkg:/ros2_NNUF:rw
-    working_dir: /ros2_NNUF
+      - ./listener_pkg:/NNUF:rw
+    working_dir: /NNUF
     networks:
-      - ros2_net
+      - node_network
 
 networks:
-  ros2_net:
+  node_network:
     driver: bridge
