@@ -15,13 +15,13 @@ down:
 log service="node0":
     podman compose logs -f {{ service }}
 
-# Run all nodes
+# Run all nodes (! Not Preffered)
 [parallel]
-run: run-talker run-listener
+run: run-talker run-listener run-seld
 
 # Build all packages
 [parallel]
-build: build-talker build-listener
+build: build-talker build-listener build-seld
 
 # Run node0
 [group("Run Individual")]
@@ -33,6 +33,11 @@ run-talker:
 run-listener:
     podman compose exec -it node1 bash -lc "source /NNUF/install/setup.bash && ros2 run listener_pkg listener"
 
+# Run node2
+[group("Run Individual")]
+run-seld:
+    podman compose exec -it node2 bash -lc "source /NNUF/install/setup.bash && ros2 run seld_pkg seld"
+
 # Build 'node0 package'
 [group("Build Individual")]
 build-talker:
@@ -42,3 +47,8 @@ build-talker:
 [group("Build Individual")]
 build-listener:
     podman compose exec -it node1 bash -lc "colcon build --packages-select listener_pkg"
+
+# Build 'node2 package'
+[group("Build Individual")]
+build-seld:
+    podman compose exec -it node2 bash -lc "colcon build --packages-select seld_pkg"

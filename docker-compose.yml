@@ -12,8 +12,6 @@ services:
       - node_network
 
   node1:
-    depends_on:
-      - node0
     image: ros:jazzy-ros-base
     container_name: listener
     command: bash -c "echo 'source /opt/ros/jazzy/setup.bash' >> ~/.bash_profile && exec bash"
@@ -21,6 +19,18 @@ services:
     tty: true
     volumes:
       - ./listener_pkg:/NNUF:rw
+    working_dir: /NNUF
+    networks:
+      - node_network
+
+  node2:
+    image: ros:jazzy-ros-base
+    container_name: seld
+    command: bash -c "echo 'source /opt/ros/jazzy/setup.bash' >> ~/.bash_profile && exec bash"
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./seld_pkg:/NNUF:rw
     working_dir: /NNUF
     networks:
       - node_network

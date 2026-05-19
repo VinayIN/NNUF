@@ -7,3 +7,8 @@ dist/
 *.egg-info/
 *.egg
 log/
+outputs/
+dataset/
+.vscode/
+.zed/
+DCASE2025_*
