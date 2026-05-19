@@ -11,11 +11,10 @@ setup(
         (f"share/{package_name}", ["package.xml"]),
     ],
     install_requires=[
-        "setuptools",
         "numpy",
         "scipy",
         "librosa",
-        "opencv-python",
+        "opencv-python-headless",
         "Pillow",
         "torch",
         "torchvision",
@@ -34,7 +33,7 @@ setup(
     },
     entry_points={
         "console_scripts": [
-            "seld = seld_pkg.inference:main",
+            "seld = seld_pkg.seld:main",
         ],
     },
 )

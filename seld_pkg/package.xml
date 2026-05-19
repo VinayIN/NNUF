@@ -7,15 +7,15 @@
   <maintainer email="root@todo.todo">root</maintainer>
   <license>Apache-2.0</license>
 
-  <exec_depend>python3-numpy</exec_depend>
-  <exec_depend>python3-scipy</exec_depend>
-  <exec_depend>python3-librosa</exec_depend>
-  <exec_depend>python3-opencv</exec_depend>
-  <exec_depend>python3-pil</exec_depend>
-  <exec_depend>python3-tqdm</exec_depend>
-  <exec_depend>python3-torch</exec_depend>
-  <exec_depend>python3-torchvision</exec_depend>
-  <exec_depend>python3-tensorboard</exec_depend>
+  <exec_depend>numpy</exec_depend>
+  <exec_depend>scipy</exec_depend>
+  <exec_depend>librosa</exec_depend>
+  <exec_depend>opencv-python-headless</exec_depend>
+  <exec_depend>Pillow</exec_depend>
+  <exec_depend>tqdm</exec_depend>
+  <exec_depend>torch</exec_depend>
+  <exec_depend>torchvision</exec_depend>
+  <exec_depend>tensorboard</exec_depend>
   <exec_depend>rclpy</exec_depend>
   <exec_depend>rcl_interfaces</exec_depend>
 
