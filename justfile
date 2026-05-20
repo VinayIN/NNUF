@@ -32,15 +32,15 @@ dev:
 mlflow port="5555":
     podman compose exec -it mlops bash -lc "mlflow server --host {{ host }} --port {{ port }} --serve-artifacts --backend-store-uri sqlite:////mlflow/mlflow.db --default-artifact-root mlflow-artifacts:/ --artifacts-destination /mlflow/artifacts --workers 1 --allowed-hosts '*'"
 
-# Start marimo in mlops
+# Start marimo in mlops 'root directory: notebooks'
 [group("Development")]
 marimo url_or_file port="2718":
     podman compose exec -it mlops bash -lc "marimo edit --host {{ host }} --port {{ port }} --headless {{ url_or_file }}"
 
-# Start JupyterLab in mlops
+# Start Jupyter notebook in mlops 'root directory: notebook'
 [group("Development")]
-jupyterlab port="8888":
-    podman compose exec -it mlops bash -lc "jupyter lab --ip {{ host }} --port {{ port }} --no-browser --allow-root"
+notebook folder_path="." port="8888":
+    podman compose exec -it mlops bash -lc "jupyter notebook --ip {{ host }} --port {{ port }} --no-browser --allow-root {{ folder_path }}"
 
 # Run all nodes (! Not Preffered)
 [parallel]

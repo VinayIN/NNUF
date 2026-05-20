@@ -10,4 +10,4 @@ tqdm
 tensorboard
 mlflow
 marimo
-jupyterlab
+notebook
