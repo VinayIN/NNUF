@@ -8,3 +8,6 @@ torch
 torchvision
 tqdm
 tensorboard
+mlflow
+marimo
+jupyterlab

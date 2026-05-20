@@ -13,3 +13,5 @@ dataset/
 .zed/
 DCASE2025_*
 .DS_Store
+.ipynb_checkpoints/
+__marimo__/

@@ -1,4 +1,5 @@
 # ROS2-Jazzy Podman Compose Commands
+host := "0.0.0.0"
 
 @default:
     just --list
@@ -15,8 +16,31 @@ down:
     podman compose down
 
 # View logs for a specific service
-log service="node0":
+log service:
     podman compose logs -f {{ service }}
+
+exec service:
+    podman compose exec -it {{ service }} bash
+
+# Open a shell in the mlops container
+[group("Development")]
+dev:
+    podman compose exec -it mlops bash -lc "exec bash"
+
+# Start MLflow in mlops
+[group("Development")]
+mlflow port="5555":
+    podman compose exec -it mlops bash -lc "mlflow server --host {{ host }} --port {{ port }} --serve-artifacts --backend-store-uri sqlite:////mlflow/mlflow.db --default-artifact-root mlflow-artifacts:/ --artifacts-destination /mlflow/artifacts --workers 1 --allowed-hosts '*'"
+
+# Start marimo in mlops
+[group("Development")]
+marimo url_or_file port="2718":
+    podman compose exec -it mlops bash -lc "marimo edit --host {{ host }} --port {{ port }} --headless {{ url_or_file }}"
+
+# Start JupyterLab in mlops
+[group("Development")]
+jupyterlab port="8888":
+    podman compose exec -it mlops bash -lc "jupyter lab --ip {{ host }} --port {{ port }} --no-browser --allow-root"
 
 # Run all nodes (! Not Preffered)
 [parallel]

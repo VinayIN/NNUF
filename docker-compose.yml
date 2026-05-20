@@ -1,49 +1,106 @@
 services:
+  mlops:
+    image: nnuf:latest
+    container_name: mlops
+    command:
+      - -lc
+      - tail -f /dev/null
+    working_dir: /notebooks
+    ports:
+      - 5555:5555
+      - 2718:2718
+      - 8888:8888
+    volumes:
+      - mlflow-artifacts:/mlflow
+      - ./notebooks:/notebooks:rw
+      - ./requirements.txt:/requirements.txt:rw
+    networks:
+      - node_network
+
   node0:
     image: nnuf:latest
     container_name: processor
-    stdin_open: true
-    tty: true
     working_dir: /NNUF
-    volumes:
-      - ./requirements.txt:/NNUF/requirements.txt:rw
+    environment:
+      - MLFLOW_TRACKING_URI=http://mlops:${MLFLOW_PORT:-5555}
     networks:
       - node_network
+    command:
+      - -lc
+      - tail -f /dev/null
+    depends_on:
+      - mlops
+    volumes:
+      - ./:/NNUF:rw
+    deploy:
+      resources:
+        limits:
+          cpus: "4"
+          memory: 2G
 
   node1:
     image: nnuf:latest
     container_name: talker
-    stdin_open: true
-    tty: true
     working_dir: /NNUF
+    environment:
+      - MLFLOW_TRACKING_URI=http://mlops:${MLFLOW_PORT:-5555}
     volumes:
       - ./talker_pkg:/NNUF:rw
-      - ./requirements.txt:/NNUF/requirements.txt:rw
     networks:
       - node_network
+    stdin_open: true
+    tty: true
+    depends_on:
+      - mlops
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 1G
 
   node2:
     image: nnuf:latest
     container_name: listener
-    stdin_open: true
-    tty: true
     working_dir: /NNUF
+    environment:
+      - MLFLOW_TRACKING_URI=http://mlops:${MLFLOW_PORT:-5555}
     volumes:
       - ./listener_pkg:/NNUF:rw
-      - ./requirements.txt:/NNUF/requirements.txt:rw
     networks:
       - node_network
+    stdin_open: true
+    tty: true
+    depends_on:
+      - mlops
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 1G
 
   node3:
     image: nnuf:latest
     container_name: seld
-    stdin_open: true
-    tty: true
+    working_dir: /NNUF
+    environment:
+      - MLFLOW_TRACKING_URI=http://mlops:${MLFLOW_PORT:-5555}
     volumes:
       - ./seld_pkg:/NNUF:rw
-    working_dir: /NNUF
     networks:
       - node_network
+    stdin_open: true
+    tty: true
+    depends_on:
+      - mlops
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 2G
+
+volumes:
+  mlflow-artifacts:
+    driver: local
 
 networks:
   node_network:
