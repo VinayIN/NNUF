@@ -1,0 +1,50 @@
+services:
+  node0:
+    image: nnuf:latest
+    container_name: processor
+    stdin_open: true
+    tty: true
+    working_dir: /NNUF
+    volumes:
+      - ./requirements.txt:/NNUF/requirements.txt:rw
+    networks:
+      - node_network
+
+  node1:
+    image: nnuf:latest
+    container_name: talker
+    stdin_open: true
+    tty: true
+    working_dir: /NNUF
+    volumes:
+      - ./talker_pkg:/NNUF:rw
+      - ./requirements.txt:/NNUF/requirements.txt:rw
+    networks:
+      - node_network
+
+  node2:
+    image: nnuf:latest
+    container_name: listener
+    stdin_open: true
+    tty: true
+    working_dir: /NNUF
+    volumes:
+      - ./listener_pkg:/NNUF:rw
+      - ./requirements.txt:/NNUF/requirements.txt:rw
+    networks:
+      - node_network
+
+  node3:
+    image: nnuf:latest
+    container_name: seld
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./seld_pkg:/NNUF:rw
+    working_dir: /NNUF
+    networks:
+      - node_network
+
+networks:
+  node_network:
+    driver: bridge

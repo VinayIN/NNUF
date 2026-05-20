@@ -3,8 +3,11 @@
 @default:
     just --list
 
+image:
+    podman build -t nnuf:latest -f Dockerfile
+
 # Start all nodes using Podman Compose in detached mode
-up:
+up: image
     podman compose up -d
 
 # Stop and remove all containers and the resources started by Podman Compose
@@ -23,32 +26,36 @@ run: run-talker run-listener run-seld
 [parallel]
 build: build-talker build-listener build-seld
 
-# Run node0
-[group("Run Individual")]
-run-talker:
-    podman compose exec -it node0 bash -lc "source /NNUF/install/setup.bash && ros2 run talker_pkg talker"
-
 # Run node1
 [group("Run Individual")]
-run-listener:
-    podman compose exec -it node1 bash -lc "source /NNUF/install/setup.bash && ros2 run listener_pkg listener"
+run-talker:
+    podman compose exec -it node1 bash -lc "source /NNUF/install/setup.bash && ros2 run talker_pkg talker"
 
 # Run node2
 [group("Run Individual")]
-run-seld:
-    podman compose exec -it node2 bash -lc "source /NNUF/install/setup.bash && ros2 run seld_pkg seld"
+run-listener:
+    podman compose exec -it node2 bash -lc "source /NNUF/install/setup.bash && ros2 run listener_pkg listener"
 
-# Build 'node0 package'
-[group("Build Individual")]
-build-talker:
-    podman compose exec -it node0 bash -lc "colcon build --packages-select talker_pkg"
+# Run node3
+[group("Run Individual")]
+run-seld:
+    podman compose exec -it node3 bash -lc "source /NNUF/install/setup.bash && ros2 run seld_pkg seld"
+
+[group("Run Individual")]
+request-seld:
+    podman compose exec -it node0 bash -lc "ros2 service call /run_inference rcl_interfaces/srv/SetParameters \"{parameters: [{name: 'audio_path', value: {type: 4, string_value: '/NNUF/seld_pkg/DCASE2025_SELD_dataset/stereo_eval/eval/sample06813.wav'}}, {name: 'video_path', value: {type: 4, string_value: '/NNUF/seld_pkg/DCASE2025_SELD_dataset/video_eval/eval/sample06813.mp4'}}]}\""
 
 # Build 'node1 package'
 [group("Build Individual")]
-build-listener:
-    podman compose exec -it node1 bash -lc "colcon build --packages-select listener_pkg"
+build-talker:
+    podman compose exec -it node1 bash -lc "colcon build --packages-select talker_pkg"
 
 # Build 'node2 package'
 [group("Build Individual")]
+build-listener:
+    podman compose exec -it node2 bash -lc "colcon build --packages-select listener_pkg"
+
+# Build 'node3 package'
+[group("Build Individual")]
 build-seld:
-    podman compose exec -it node2 bash -lc "colcon build --packages-select seld_pkg"
+    podman compose exec -it node3 bash -lc "colcon build --packages-select seld_pkg"

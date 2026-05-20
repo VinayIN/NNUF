@@ -12,3 +12,4 @@ dataset/
 .vscode/
 .zed/
 DCASE2025_*
+.DS_Store

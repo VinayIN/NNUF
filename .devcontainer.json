@@ -9,11 +9,14 @@
 
   // The 'service' property is the name of the service for the container that VS Code should
   // use. Update this value and .devcontainer/docker-compose.yml to the real service name.
-  "service": "node2",
+  "service": "node3",
 
   // The optional 'workspaceFolder' property is the path VS Code should open by default when
   // connected. This is typically a file mount in .devcontainer/docker-compose.yml
   "workspaceFolder": "/NNUF",
+
+  // Install local deps after the workspace is mounted.
+  // "postCreateCommand": "python3 -m pip install .",
 
   // Features to add to the dev container. More info: https://containers.dev/features.
   // "features": {},
@@ -40,14 +43,6 @@
         "ms-vscode.cpptools",
         "ms-vscode.cmake-tools",
       ],
-      "settings": {
-        "python.analysis.extraPaths": [
-          "/opt/ros/jazzy/lib/python3.12/site-packages",
-        ],
-        "python.autoComplete.extraPaths": [
-          "/opt/ros/jazzy/lib/python3.12/site-packages",
-        ],
-      },
     },
   },
 

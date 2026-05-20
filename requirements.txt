@@ -1,0 +1,10 @@
+setuptools==68.2.2
+numpy
+scipy
+librosa
+opencv-python-headless
+Pillow
+torch
+torchvision
+tqdm
+tensorboard
