@@ -2,7 +2,7 @@ services:
   mlops:
     image: nnuf:latest
     container_name: mlops
-    working_dir: /NNUF/notebooks
+    working_dir: /notebooks
     command:
       - -lc
       - mlflow server --host 0.0.0.0 --port 5555 --serve-artifacts --backend-store-uri sqlite:////mlflow/mlflow.db --default-artifact-root mlflow-artifacts:/ --artifacts-destination /mlflow/artifacts --workers 1 --allowed-hosts '*'
@@ -12,8 +12,8 @@ services:
       - 8888:8888
     volumes:
       - mlflow-artifacts:/mlflow
-      - ./seld_pkg/seld_pkg:/NNUF/seld_pkg:ro
-      - ./notebooks:/NNUF/notebooks:rw
+      - ./seld_pkg/seld_pkg:/seld_pkg:ro
+      - ./notebooks:/notebooks:rw
     environment:
       - MLFLOW_TRACKING_URI=http://127.0.0.1:5555
     networks:
