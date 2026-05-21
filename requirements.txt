@@ -1,13 +1,29 @@
-setuptools==68.2.2
+# Core ML & Audio/Video
 numpy
 scipy
 librosa
 opencv-python-headless
 Pillow
+tqdm
+
+# PyTorch & PT2E Quantization
 torch
 torchvision
-tqdm
-tensorboard
+
+# ONNX
+onnx
+onnxruntime
+
+# TensorFlow
+tensorflow
+
+# LiteRT Torch (disabled: no aarch64 linux wheels for dependency litert-converter)
+# litert-torch
+
+# Tracking & Visualization
 mlflow
+tensorboard
+
+# Notebook & Utilities
 marimo
 notebook

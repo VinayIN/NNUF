@@ -5,7 +5,7 @@ host := "0.0.0.0"
     just --list
 
 image:
-    podman build -t nnuf:latest -f Dockerfile
+    podman build -t nnuf:latest -f Dockerfile .
 
 # Start all nodes using Podman Compose in detached mode
 up: image
@@ -26,11 +26,6 @@ exec service:
 [group("Development")]
 dev:
     podman compose exec -it mlops bash -lc "exec bash"
-
-# Start MLflow in mlops
-[group("Development")]
-mlflow port="5555":
-    podman compose exec -it mlops bash -lc "mlflow server --host {{ host }} --port {{ port }} --serve-artifacts --backend-store-uri sqlite:////mlflow/mlflow.db --default-artifact-root mlflow-artifacts:/ --artifacts-destination /mlflow/artifacts --workers 1 --allowed-hosts '*'"
 
 # Start marimo in mlops 'root directory: notebooks'
 [group("Development")]

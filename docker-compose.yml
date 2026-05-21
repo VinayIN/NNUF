@@ -2,18 +2,20 @@ services:
   mlops:
     image: nnuf:latest
     container_name: mlops
+    working_dir: /NNUF/notebooks
     command:
       - -lc
-      - tail -f /dev/null
-    working_dir: /notebooks
+      - mlflow server --host 0.0.0.0 --port 5555 --serve-artifacts --backend-store-uri sqlite:////mlflow/mlflow.db --default-artifact-root mlflow-artifacts:/ --artifacts-destination /mlflow/artifacts --workers 1 --allowed-hosts '*'
     ports:
       - 5555:5555
       - 2718:2718
       - 8888:8888
     volumes:
       - mlflow-artifacts:/mlflow
-      - ./notebooks:/notebooks:rw
-      - ./requirements.txt:/requirements.txt:rw
+      - ./seld_pkg/seld_pkg:/NNUF/seld_pkg:ro
+      - ./notebooks:/NNUF/notebooks:rw
+    environment:
+      - MLFLOW_TRACKING_URI=http://127.0.0.1:5555
     networks:
       - node_network
 
@@ -22,7 +24,7 @@ services:
     container_name: processor
     working_dir: /NNUF
     environment:
-      - MLFLOW_TRACKING_URI=http://mlops:${MLFLOW_PORT:-5555}
+      - MLFLOW_TRACKING_URI=http://mlops:5555
     networks:
       - node_network
     command:
@@ -43,7 +45,7 @@ services:
     container_name: talker
     working_dir: /NNUF
     environment:
-      - MLFLOW_TRACKING_URI=http://mlops:${MLFLOW_PORT:-5555}
+      - MLFLOW_TRACKING_URI=http://mlops:5555
     volumes:
       - ./talker_pkg:/NNUF:rw
     networks:
@@ -63,7 +65,7 @@ services:
     container_name: listener
     working_dir: /NNUF
     environment:
-      - MLFLOW_TRACKING_URI=http://mlops:${MLFLOW_PORT:-5555}
+      - MLFLOW_TRACKING_URI=http://mlops:5555
     volumes:
       - ./listener_pkg:/NNUF:rw
     networks:
@@ -83,7 +85,7 @@ services:
     container_name: seld
     working_dir: /NNUF
     environment:
-      - MLFLOW_TRACKING_URI=http://mlops:${MLFLOW_PORT:-5555}
+      - MLFLOW_TRACKING_URI=http://mlops:5555
     volumes:
       - ./seld_pkg:/NNUF:rw
     networks:
